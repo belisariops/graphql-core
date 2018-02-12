@@ -93,6 +93,11 @@ class ExecutionContext(object):
         exception = format_exception(type(error), error, getattr(error, 'stack', None) or traceback)
         logger.error(''.join(exception))
         self.errors.append(error)
+        try:
+        	from unholster_api.model.db_adapter import db_session
+        	db_session.rollback()
+        except:
+        	return None
 
     def get_sub_fields(self, return_type, field_asts):
         k = return_type, tuple(field_asts)
